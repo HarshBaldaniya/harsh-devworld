@@ -1,10 +1,9 @@
-// src/app/layout.tsx
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Harsh | BMW Dev Portfolio",
-  description: "BMW-inspired interactive developer portfolio",
+export const metadata: Metadata = {
+  title: "Harsh Dev World",
+  description: "Portfolio inspired by macOS",
 };
 
 export default function RootLayout({
@@ -14,10 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="relative bg-black text-white font-sans">
-        <Navbar />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

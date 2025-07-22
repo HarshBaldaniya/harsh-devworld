@@ -1,17 +1,8 @@
-"use client";
-import { useEffect, useState } from "react";
-import Loader from "@/components/Loader";
-import Hero from "@/components/Hero";
-
-export default function Home() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
+// src/app/page.tsx
+export default function HomePage() {
   return (
-    <main className="min-h-screen">{loading ? <Loader /> : <Hero />}</main>
+    <main className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+      <h1 className="text-4xl font-bold">Hello, World! 🌍</h1>
+    </main>
   );
 }
