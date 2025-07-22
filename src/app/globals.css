@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+  background-color: #000; /* BMW black theme */
+  color: white;
+  font-family: "Inter", sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #007aff;
+  border-radius: 10px;
+}
