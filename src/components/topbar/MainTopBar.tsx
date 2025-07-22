@@ -6,8 +6,18 @@ import {
   FaToggleOn,
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import TopBarLeft, { AppleMenuAction } from "./TopBarLeft";
+import TopBarRight from "./TopBarRight";
 
-export default function TopMenuBar() {
+// Replace 'any' with a minimal BatteryManager type
+type BatteryManager = {
+  level: number;
+  charging: boolean;
+  addEventListener: (type: string, listener: () => void) => void;
+  removeEventListener: (type: string, listener: () => void) => void;
+};
+
+export default function MainTopBar({ onAppleMenuAction }: { onAppleMenuAction?: (action: AppleMenuAction) => void }) {
   const [currentTime, setCurrentTime] = useState("");
   const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
   const [isCharging, setIsCharging] = useState<boolean | null>(null);
@@ -38,7 +48,7 @@ export default function TopMenuBar() {
     const fetchBatteryStatus = async () => {
       if ("getBattery" in navigator) {
         try {
-          const battery: any = await (navigator as any).getBattery();
+          const battery: BatteryManager = await (navigator as unknown as { getBattery: () => Promise<BatteryManager> }).getBattery();
 
           const updateBatteryInfo = () => {
             setBatteryLevel(Math.floor(battery.level * 100));
@@ -71,33 +81,8 @@ export default function TopMenuBar() {
 
   return (
     <div className="fixed top-0 inset-x-0 z-50 h-8 px-4 flex justify-between items-center bg-black/30 backdrop-blur-sm text-white text-sm font-medium">
-      {/* Left menu */}
-      <div className="flex items-center gap-4">
-        <FaApple className="text-lg" />
-        <span>Finder</span>
-        <span>File</span>
-        <span>Edit</span>
-        <span>View</span>
-        <span>Go</span>
-        <span>Window</span>
-        <span>Help</span>
-      </div>
-
-      {/* Right icons */}
-      <div className="flex items-center gap-3">
-        <span className="flex items-center gap-1">
-          <span>{displayLevel}%</span>
-          {displayCharging ? (
-            <FaPlug className="text-base" title="Charging" />
-          ) : (
-            <FaBatteryThreeQuarters className="text-base" title="Battery" />
-          )}
-        </span>
-
-        <FaWifi className="text-base" />
-        <FaToggleOn className="text-base" title="Toggle" />
-        <span>{currentTime}</span>
-      </div>
+      <TopBarLeft onAppleMenuAction={onAppleMenuAction} />
+      <TopBarRight displayLevel={displayLevel} displayCharging={displayCharging} currentTime={currentTime} />
     </div>
   );
 }
