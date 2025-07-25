@@ -206,13 +206,13 @@ export default function TopBarLeft({ onAppleMenuAction }: TopBarLeftProps) {
           // Button for all menu items except separators
           let onClick = undefined;
           if (menuItem.label === 'Restart...') {
-            onClick = () => { setOpenMenu(null); if (onAppleMenuAction) onAppleMenuAction('restart'); console.log('Clicked Apple menu: Restart...'); };
+            onClick = () => { setOpenMenu(null); window.location.reload(); };
           } else if (menuItem.label === 'Shut Down...') {
-            onClick = () => { setOpenMenu(null); if (onAppleMenuAction) onAppleMenuAction('shutdown'); console.log('Clicked Apple menu: Shut Down...'); };
+            onClick = () => { setOpenMenu(null); if (onAppleMenuAction) onAppleMenuAction('shutdown'); };
           } else if (menuItem.label === 'Lock Screen' || menuItem.label === 'Sleep') {
-            onClick = () => { setOpenMenu(null); if (onAppleMenuAction) onAppleMenuAction('lock'); console.log(`Clicked Apple menu: ${menuItem.label}`); };
+            onClick = () => { setOpenMenu(null); if (onAppleMenuAction) onAppleMenuAction('lock'); };
           } else if (!menuItem.disabled && !('type' in menuItem)) {
-            onClick = () => { setOpenMenu(null); console.log(`Clicked Apple menu: ${menuItem.label}`); };
+            onClick = () => { setOpenMenu(null); };
           }
           return (
             <button
@@ -247,6 +247,7 @@ export default function TopBarLeft({ onAppleMenuAction }: TopBarLeftProps) {
   }
 
   return (
+    // Remove the fragment and Restart button, just return the menu bar
     <div className="flex items-center gap-1 relative select-none mac-menu-bar">
       <div
         className="relative h-full flex items-center"

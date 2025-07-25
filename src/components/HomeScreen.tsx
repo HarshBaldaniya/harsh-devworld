@@ -1,7 +1,6 @@
 "use client";
 
 import MacBackground from "./MacBackground";
-import MainTopBar from "./topbar/MainTopBar";
 import { motion } from "framer-motion";
 
 export default function HomeScreen() {
@@ -15,9 +14,6 @@ export default function HomeScreen() {
     >
       {/* Background */}
       <MacBackground />
-
-      {/* Top menu bar */}
-      <MainTopBar />
 
       {/* Home text */}
       <div className="relative z-10 flex items-center justify-center h-screen text-white">
