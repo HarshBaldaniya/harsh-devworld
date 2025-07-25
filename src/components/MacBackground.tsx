@@ -6,7 +6,7 @@ export default function MacBackground() {
   return (
     <div className="absolute inset-0 z-0">
       <Image
-        src="/mac-wallpaper.jpg"
+        src="/mac-wallpaper-1.jpg"
         alt="MacBook Background"
         fill
         priority
