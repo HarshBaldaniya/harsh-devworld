@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import BootLoader from "@/components/loader/BootLoader";
 import HomeScreen from "@/components/HomeScreen";
 import MainTopBar from "@/components/topbar/MainTopBar";
+import LockScreen from "@/components/LockScreen";
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppleMenuAction } from "@/components/topbar/TopBarLeft";
 
@@ -11,11 +12,14 @@ export default function HomePage() {
   const [bootComplete, setBootComplete] = useState(false);
   const [shutdown, setShutdown] = useState(false);
   const [showBoot, setShowBoot] = useState(false);
+  const [lock, setLock] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleAppleMenuAction = (action: AppleMenuAction) => {
     if (action === "shutdown") {
       setShutdown(true);
+    } else if (action === "lock") {
+      setLock(true);
     }
   };
 
@@ -38,7 +42,7 @@ export default function HomePage() {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {bootComplete && !shutdown && !showBoot && (
+        {bootComplete && !shutdown && !showBoot && !lock && (
           <>
             <MainTopBar onAppleMenuAction={handleAppleMenuAction} />
             <HomeScreen />
@@ -63,6 +67,11 @@ export default function HomePage() {
               style={{ width: "auto", height: "auto", maxWidth: "128px", maxHeight: "128px" }}
             />
           </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {lock && (
+          <LockScreen onUnlock={() => setLock(false)} />
         )}
       </AnimatePresence>
       <AnimatePresence>

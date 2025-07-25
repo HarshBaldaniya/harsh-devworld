@@ -16,8 +16,7 @@ const APPLE_MENU = [
   { label: "Restart...", disabled: false },
   { label: "Shut Down...", disabled: false },
   { type: "separator" as const },
-  { label: "Lock Screen", shortcut: "⌃⌘Q", disabled: false },
-  { label: "Log Out Harsh Baldaniya...", shortcut: "⇧⌘Q", disabled: true },
+  { label: "Lock Screen", shortcut: "⌃⌘Q", disabled: false }
 ];
 
 const MENU = [
