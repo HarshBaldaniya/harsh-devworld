@@ -8,7 +8,7 @@ const APPLE_MENU = [
   { label: "System Settings..." },
   { label: "App Store" },
   { type: "separator" as const },
-  { label: "Recent Items", rightIcon: <FiChevronRight /> },
+  { label: "Recent Items", rightIcon: <FiChevronRight />, disabled: true  },
   { type: "separator" as const },
   { label: "Force Quit...", shortcut: "⌥⌘⎋", disabled: true },
   { type: "separator" as const },
@@ -122,10 +122,10 @@ function renderSubMenu(submenu: MenuItem[], setOpenMenu: (v: string | null) => v
               {menuItem.icon ? <span className="text-base opacity-80">{menuItem.icon}</span> : null}
               {menuItem.label}
             </span>
-            <span className="flex flex-col items-end min-w-[40px]">
-              {menuItem.shortcut ? menuItem.shortcut.split(' ').map((key, i) => (
-                <span key={i} className="text-xs tabular-nums opacity-80 ml-2 text-right">{key}</span>
-              )) : null}
+            <span className="flex flex-row items-center justify-end min-w-[40px] gap-1 whitespace-nowrap">
+              {menuItem.shortcut ? (
+                <span className="text-xs tabular-nums opacity-80 ml-2 text-right">{menuItem.shortcut}</span>
+              ) : null}
               {menuItem.rightIcon ? <span>{menuItem.rightIcon}</span> : null}
             </span>
           </div>
@@ -232,10 +232,10 @@ export default function TopBarLeft({ onAppleMenuAction }: TopBarLeftProps) {
                 {menuItem.icon ? <span className="text-base opacity-80">{menuItem.icon}</span> : null}
                 {menuItem.label}
               </span>
-              <span className="flex flex-col items-end min-w-[40px]">
-                {menuItem.shortcut ? menuItem.shortcut.split(' ').map((key, i) => (
-                  <span key={i} className="text-xs tabular-nums opacity-80 ml-2 text-right">{key}</span>
-                )) : null}
+              <span className="flex flex-row items-center justify-end min-w-[40px] gap-1 whitespace-nowrap">
+                {menuItem.shortcut ? (
+                  <span className="text-xs tabular-nums opacity-80 ml-2 text-right">{menuItem.shortcut}</span>
+                ) : null}
                 {menuItem.rightIcon ? <span>{menuItem.rightIcon}</span> : null}
               </span>
             </button>
