@@ -6,6 +6,7 @@ import HomeScreen from "@/components/HomeScreen";
 import MainTopBar from "@/components/topbar/MainTopBar";
 import LockScreen from "@/components/LockScreen";
 import Dock from "@/components/Dock";
+import AppManager from "@/components/app-window/AppManager";
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppleMenuAction } from "@/components/topbar/TopBarLeft";
 
@@ -34,6 +35,12 @@ export default function HomePage() {
     }, 2500);
   };
 
+  const handleAppClick = (appId: string) => {
+    if ((window as any).openApp) {
+      (window as any).openApp(appId);
+    }
+  };
+
   return (
     <>
       <audio ref={audioRef} src="/sounds/apple-boot.mp3" preload="auto" />
@@ -47,7 +54,8 @@ export default function HomePage() {
           <>
             <MainTopBar onAppleMenuAction={handleAppleMenuAction} />
             <HomeScreen />
-            <Dock />
+            <Dock onAppClick={handleAppClick} />
+            <AppManager />
           </>
         )}
       </AnimatePresence>
