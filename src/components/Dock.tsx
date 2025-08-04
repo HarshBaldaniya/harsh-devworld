@@ -100,7 +100,6 @@ export default function Dock({ onAppClick }: DockProps) {
                   ease: "easeOut"
                 }}
                 onClick={() => onAppClick?.(app.id)}
-                style={{ cursor: "pointer" }}
               >
                 <Image
                   src={app.icon}
