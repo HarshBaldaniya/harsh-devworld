@@ -5,6 +5,7 @@ import BootLoader from "@/components/loader/BootLoader";
 import HomeScreen from "@/components/HomeScreen";
 import MainTopBar from "@/components/topbar/MainTopBar";
 import LockScreen from "@/components/LockScreen";
+import Dock from "@/components/Dock";
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppleMenuAction } from "@/components/topbar/TopBarLeft";
 
@@ -46,6 +47,7 @@ export default function HomePage() {
           <>
             <MainTopBar onAppleMenuAction={handleAppleMenuAction} />
             <HomeScreen />
+            <Dock />
           </>
         )}
       </AnimatePresence>
