@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const LOCK_BG = "/lock-screen.jpg";
 const AVATAR = "/hb-logo.jpg";
@@ -59,9 +60,11 @@ export default function LockScreen({ onUnlock }: { onUnlock: () => void }) {
           </div>
         </div>
         <div className="flex flex-col items-center mb-16 select-none">
-          <img
+          <Image
             src={AVATAR}
             alt="User Avatar"
+            width={48}
+            height={48}
             className="w-12 h-12 rounded-full object-cover border-2 border-white/70 shadow mb-2"
             style={{ background: "#fff" }}
           />

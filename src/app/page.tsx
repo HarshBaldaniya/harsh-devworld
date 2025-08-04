@@ -36,8 +36,8 @@ export default function HomePage() {
   };
 
   const handleAppClick = (appId: string) => {
-    if ((window as any).openApp) {
-      (window as any).openApp(appId);
+    if ((window as Window & { openApp?: (appId: string) => void }).openApp) {
+      (window as Window & { openApp?: (appId: string) => void }).openApp!(appId);
     }
   };
 

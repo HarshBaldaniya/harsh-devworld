@@ -31,7 +31,7 @@ export default function AppManager() {
 
   // Expose openApp function globally
   React.useEffect(() => {
-    (window as any).openApp = (appId: string) => {
+    (window as Window & { openApp?: (appId: string) => void }).openApp = (appId: string) => {
       setApps(prev => ({
         ...prev,
         [appId]: {
@@ -40,12 +40,15 @@ export default function AppManager() {
           isMinimized: false,
           isMaximized: false,
           zIndex: maxZIndex + 1,
+          position: { x: 100 + (Object.keys(prev).length * 50), y: 100 + (Object.keys(prev).length * 30) },
+          size: { width: 800, height: 600 },
+          lastState: 'normal',
         }
       }));
       setMaxZIndex(prev => prev + 1);
     };
 
-    (window as any).bringToFront = (appId: string) => {
+    (window as Window & { bringToFront?: (appId: string) => void }).bringToFront = (appId: string) => {
       setApps(prev => ({
         ...prev,
         [appId]: {
@@ -57,58 +60,7 @@ export default function AppManager() {
     };
   }, [maxZIndex]);
 
-  const openApp = (appId: string) => {
-    setApps(prev => {
-      const existingApp = prev[appId];
-      
-      if (existingApp && existingApp.isOpen === false) {
-        // App was closed, start fresh
-        const newApp: AppState = {
-          ...APPS[appId as keyof typeof APPS],
-          isOpen: true,
-          isMinimized: false,
-          isMaximized: false,
-          zIndex: maxZIndex + 1,
-          position: { x: 100 + (Object.keys(prev).length * 50), y: 100 + (Object.keys(prev).length * 30) },
-          size: { width: 600, height: 400 },
-          lastState: 'normal',
-        };
-        return {
-          ...prev,
-          [appId]: newApp,
-        };
-      } else if (existingApp && existingApp.lastState === 'minimized') {
-        // Restore from minimized state - check if it was maximized before
-        const wasMaximized = existingApp.isMaximized;
-        return {
-          ...prev,
-          [appId]: {
-            ...existingApp,
-            isOpen: true,
-            isMinimized: false,
-            isMaximized: wasMaximized,
-            zIndex: maxZIndex + 1,
-          }
-        };
-      } else {
-        // Open in default state
-        return {
-          ...prev,
-          [appId]: {
-            ...APPS[appId as keyof typeof APPS],
-            isOpen: true,
-            isMinimized: false,
-            isMaximized: false,
-            zIndex: maxZIndex + 1,
-            position: { x: 100 + (Object.keys(prev).length * 50), y: 100 + (Object.keys(prev).length * 30) },
-            size: { width: 600, height: 400 },
-            lastState: 'normal',
-          }
-        };
-      }
-    });
-    setMaxZIndex(prev => prev + 1);
-  };
+
 
   const closeApp = (appId: string) => {
     setApps(prev => {
@@ -141,26 +93,7 @@ export default function AppManager() {
     }));
   };
 
-  const bringToFront = (appId: string) => {
-    setApps(prev => ({
-      ...prev,
-      [appId]: {
-        ...prev[appId],
-        zIndex: maxZIndex + 1,
-      }
-    }));
-    setMaxZIndex(prev => prev + 1);
-  };
 
-  const updateWindowState = (appId: string, updates: Partial<AppState>) => {
-    setApps(prev => ({
-      ...prev,
-      [appId]: {
-        ...prev[appId],
-        ...updates,
-      }
-    }));
-  };
 
   const renderAppContent = (appId: string) => {
     switch (appId) {

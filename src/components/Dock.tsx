@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const DOCK_APPS = [
   { id: "finder", name: "Finder", icon: "/images/dock/finder.png", active: false },
@@ -101,9 +102,11 @@ export default function Dock({ onAppClick }: DockProps) {
                 onClick={() => onAppClick?.(app.id)}
                 style={{ cursor: "pointer" }}
               >
-                <img
+                <Image
                   src={app.icon}
                   alt={app.name}
+                  width={56}
+                  height={56}
                   className="w-14 h-14 object-contain"
                   draggable={false}
                 />
