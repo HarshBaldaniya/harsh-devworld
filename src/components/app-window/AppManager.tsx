@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import AppWindow from "./AppWindow";
 import FinderApp from "./FinderApp";
+import ChromeApp from "./ChromeApp";
 
 export interface AppState {
   id: string;
@@ -22,6 +23,11 @@ const APPS = {
     id: "finder",
     name: "Finder",
     icon: "/images/dock/finder.png",
+  },
+  chrome: {
+    id: "chrome",
+    name: "Chrome",
+    icon: "/images/dock/chrome.webp",
   },
 };
 
@@ -99,6 +105,8 @@ export default function AppManager() {
     switch (appId) {
       case "finder":
         return <FinderApp />;
+      case "chrome":
+        return <ChromeApp />;
       default:
         return <div>App not found</div>;
     }
