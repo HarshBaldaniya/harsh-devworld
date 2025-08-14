@@ -101,8 +101,8 @@ const READER_CSS = `
 `;
 
 // Debounce for persistence
-function debounce<T extends (...a: any[]) => void>(fn: T, ms: number) {
-  let t: any;
+function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number) {
+  let t: NodeJS.Timeout | undefined;
   return (...args: Parameters<T>) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
 
@@ -151,7 +151,16 @@ export default function ChromeApp() {
 
   /* ── Load persisted snapshot ─────────────────────────────────────────────── */
   useEffect(() => {
-    const snap = secureStore.get<any>(STORAGE_KEY);
+    const snap = secureStore.get<{
+      tabs?: Tab[];
+      activeId?: string;
+      address?: string;
+      bookmarks?: Bookmark[];
+      history?: HistoryItem[];
+      zoom?: number;
+      searchType?: SearchType;
+      inlineQuery?: string;
+    }>(STORAGE_KEY);
     if (!snap) return;
     const {
       tabs: t, activeId: a, address: adr, bookmarks: bm, history: hs, zoom: z,
@@ -168,7 +177,16 @@ export default function ChromeApp() {
   }, []);
 
   /* ── Persist on change (debounced) ───────────────────────────────────────── */
-  const persist = useRef(debounce((payload: any) => {
+  const persist = useRef(debounce((payload: {
+    tabs: Tab[];
+    activeId: string;
+    address: string;
+    bookmarks: Bookmark[];
+    history: HistoryItem[];
+    zoom: number;
+    searchType: SearchType;
+    inlineQuery: string;
+  }) => {
     try { secureStore.set(STORAGE_KEY, payload); } catch {}
   }, 250)).current;
 
@@ -451,9 +469,27 @@ export default function ChromeApp() {
 
   /* Search (via API route) */
 
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [imageResults, setImageResults] = useState<any[]>([]);
-  const [videoResults, setVideoResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Array<{
+    title: string;
+    url: string;
+    snippet: string;
+    site: string;
+  }>>([]);
+  const [imageResults, setImageResults] = useState<Array<{
+    thumbnail: string;
+    original: string;
+    link: string;
+    source: string;
+    title: string;
+  }>>([]);
+  const [videoResults, setVideoResults] = useState<Array<{
+    title: string;
+    url: string;
+    thumbnail: string;
+    source: string;
+    snippet: string;
+    duration?: string;
+  }>>([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
   function extractDuration(exts?: string[] | undefined): string | undefined {
@@ -492,22 +528,30 @@ export default function ChromeApp() {
       const json = await res.json();
 
       if (type === "images") {
-        const items = (json.images_results || []).map((r: any) => ({
+        const items = (json.images_results || []).map((r: { thumbnail: string; original: string; link: string; title: string }) => ({
           thumbnail: r.thumbnail, original: r.original, link: r.link, source: hostTitle(r.link), title: r.title
         }));
         setImageResults(items);
       } else if (type === "videos") {
-        const items = (json.video_results || []).map((r: any) => ({
+        const items = (json.video_results || []).map((r: { 
+          title: string; 
+          link: string; 
+          thumbnail?: { static?: string } | string; 
+          source?: string; 
+          snippet?: string; 
+          description?: string;
+          rich_snippet?: { top?: { extensions?: string[] } };
+        }) => ({
           title: r.title,
           url: r.link,
-          thumbnail: r.thumbnail?.static || r.thumbnail,
+          thumbnail: typeof r.thumbnail === 'object' ? r.thumbnail?.static || '' : r.thumbnail || '',
           source: r.source || hostTitle(r.link),
-          snippet: r.snippet || r.description,
+          snippet: r.snippet || r.description || '',
           duration: extractDuration(r?.rich_snippet?.top?.extensions),
         }));
         setVideoResults(items);
       } else {
-        const items = (json.organic_results || []).map((r: any) => ({
+        const items = (json.organic_results || []).map((r: { title: string; link: string; snippet: string }) => ({
           title: r.title, url: r.link, snippet: r.snippet, site: hostTitle(r.link)
         }));
         setSearchResults(items);

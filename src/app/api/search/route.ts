@@ -52,7 +52,7 @@ export async function GET(req: Request) {
 
   try {
     const upstream = await fetch(url, { cache: "no-store" });
-    const data = await upstream.json().catch(() => ({} as any));
+    const data = await upstream.json().catch(() => ({} as Record<string, unknown>));
 
     // Detect plan/account errors
     const errMsg: string | undefined =

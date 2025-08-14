@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -517,9 +517,9 @@ export default function FinderApp() {
 
   const stripHtml = (html: string) => (html ? html.replace(/<[^>]+>/g, "") : "");
   const normalize = (s: string) => s.replace(/\s+/g, " ").trim();
-  const hasUnsaved = () => normalize(editingText) !== normalize(originalText);
+  const hasUnsaved = useCallback(() => normalize(editingText) !== normalize(originalText), [editingText, originalText]);
 
-  const saveTextFile = () => {
+  const saveTextFile = useCallback(() => {
     if (!editingFile) return;
     setFiles((prev) =>
       prev.map((f) =>
@@ -534,7 +534,15 @@ export default function FinderApp() {
       )
     );
     setOriginalText(editingText);
-  };
+  }, [editingFile, editingText]);
+
+  const attemptCloseEditor = useCallback(() => {
+    if (hasUnsaved()) {
+      setConfirmClose(true);
+      return;
+    }
+    setShowTextEditor(false);
+  }, [hasUnsaved]);
 
   useEffect(() => {
     if (!showTextEditor) return;
@@ -550,15 +558,7 @@ export default function FinderApp() {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [showTextEditor, editingText, editingFile]);
-
-  const attemptCloseEditor = () => {
-    if (hasUnsaved()) {
-      setConfirmClose(true);
-      return;
-    }
-    setShowTextEditor(false);
-  };
+  }, [showTextEditor, saveTextFile, attemptCloseEditor]);
 
   // Close create menu if clicked outside
   useEffect(() => {

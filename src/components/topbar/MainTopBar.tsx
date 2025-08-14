@@ -1,10 +1,4 @@
-import {
-  FaApple,
-  FaWifi,
-  FaBatteryThreeQuarters,
-  FaPlug,
-  FaToggleOn,
-} from "react-icons/fa";
+// Unused imports removed - these icons are used in TopBarRight component
 import { useEffect, useState } from "react";
 import TopBarLeft, { AppleMenuAction } from "./TopBarLeft";
 import TopBarRight from "./TopBarRight";

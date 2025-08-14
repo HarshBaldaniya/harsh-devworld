@@ -90,7 +90,7 @@ export const secureStore = {
     const payload = JSON.stringify({ t: Date.now(), v: value });
     _set(key, obf(payload, SECRET));
   },
-  get<T = any>(key: string): T | null {
+  get<T = unknown>(key: string): T | null {
     try {
       const enc = _get(key);
       if (!enc) return null;
