@@ -1,1 +1,82 @@
 @import "tailwindcss";
+
+/* TipTap Editor Styles */
+.ProseMirror {
+  outline: none;
+  min-height: 100%;
+}
+
+.ProseMirror p {
+  margin: 0.5em 0;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  margin: 1em 0 0.5em 0;
+  font-weight: 600;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.ProseMirror li {
+  margin: 0.25em 0;
+}
+
+.ProseMirror blockquote {
+  border-left: 3px solid #3b82f6;
+  margin: 1em 0;
+  padding-left: 1em;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.ProseMirror code {
+  background-color: #374151;
+  color: #f3f4f6;
+  padding: 0.125em 0.25em;
+  border-radius: 0.25em;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875em;
+}
+
+.ProseMirror pre {
+  background-color: #1f2937;
+  color: #f3f4f6;
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.ProseMirror pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Dark mode styles */
+.dark .ProseMirror {
+  color: #f3f4f6;
+}
+
+.dark .ProseMirror blockquote {
+  color: #9ca3af;
+}
+
+.dark .ProseMirror code {
+  background-color: #4b5563;
+  color: #f3f4f6;
+}
+
+.dark .ProseMirror pre {
+  background-color: #374151;
+  color: #f3f4f6;
+}
