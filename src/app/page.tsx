@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import BootLoader from "@/components/loader/BootLoader";
 import HomeScreen from "@/components/HomeScreen";
 import MainTopBar from "@/components/topbar/MainTopBar";
@@ -70,9 +71,11 @@ export default function HomePage() {
             transition={{ duration: 0.7 }}
             onClick={handleShutdownClick}
           >
-            <img
+            <Image
               src="/apple-logo.svg"
               alt="Apple Logo"
+              width={128}
+              height={128}
               className="w-24 h-24 sm:w-32 sm:h-32 invert"
               style={{ width: "auto", height: "auto", maxWidth: "128px", maxHeight: "128px" }}
             />

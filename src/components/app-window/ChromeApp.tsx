@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import {
   HiChevronLeft, HiChevronRight, HiRefresh, HiBookmark, HiPlus, HiX,
   HiStar, HiSearch, HiClock, HiDownload, HiPhotograph, HiMicrophone,
@@ -101,7 +102,7 @@ const READER_CSS = `
 `;
 
 // Debounce for persistence
-function debounce<T extends (...args: unknown[]) => void>(fn: T, ms: number) {
+function debounce<T extends (...args: any[]) => void>(fn: T, ms: number) {
   let t: NodeJS.Timeout | undefined;
   return (...args: Parameters<T>) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
 }
@@ -556,8 +557,8 @@ export default function ChromeApp() {
         }));
         setSearchResults(items);
       }
-    } catch (e: any) {
-      setSearchError(e?.message || "Failed to fetch");
+    } catch (e: unknown) {
+      setSearchError((e as Error)?.message || "Failed to fetch");
     } finally {
       setSearchLoading(false);
     }
@@ -619,7 +620,7 @@ export default function ChromeApp() {
         <div className="flex items-center flex-1 overflow-x-auto">
           {tabs.map(tab => (
             <div key={tab.id} className={`flex items-center gap-2 px-4 py-2 min-w-0 max-w-48 cursor-pointer border-r border-gray-200 ${activeId === tab.id ? "bg-white shadow-sm" : "hover:bg-gray-100"}`} onClick={() => switchTab(tab.id)} title={tab.url}>
-              {tab.favicon ? <img src={tab.favicon} className="w-4 h-4" alt="" /> : <span className="w-4 h-4 rounded bg-gray-300" />}
+              {tab.favicon ? <Image src={tab.favicon} width={16} height={16} className="w-4 h-4" alt="" /> : <span className="w-4 h-4 rounded bg-gray-300" />}
               <span className="text-sm truncate flex-1">{tab.title || hostTitle(tab.url)}</span>
               <button onClick={(e) => { e.stopPropagation(); closeTab(tab.id); }} className="w-5 h-5 rounded-full hover:bg-gray-300 flex items-center justify-center"><HiX className="w-3 h-3" /></button>
             </div>
@@ -641,7 +642,7 @@ export default function ChromeApp() {
                   {bookmarks.length === 0 && <div className="text-xs text-gray-500 px-2 py-4">No bookmarks yet</div>}
                   {bookmarks.map(b => (
                     <button key={b.id} onClick={() => { setShowBookmarks(false); setAddress(b.url); navigate(b.url); }} className="w-full flex items-center gap-2 p-2 rounded hover:bg-gray-200 text-left">
-                      {b.favicon ? <img src={b.favicon} className="w-4 h-4" alt="" /> : <div className="w-4 h-4 bg-gray-300 rounded" />}
+                      {b.favicon ? <Image src={b.favicon} width={16} height={16} className="w-4 h-4" alt="" /> : <div className="w-4 h-4 bg-gray-300 rounded" />}
                       <div className="min-w-0">
                         <div className="text-sm truncate">{b.title}</div>
                         <div className="text-[11px] text-gray-500 truncate">{b.url}</div>
@@ -655,7 +656,7 @@ export default function ChromeApp() {
                   {history.length === 0 && <div className="text-xs text-gray-500 px-2 py-4">No history yet</div>}
                   {history.map(h => (
                     <button key={h.id} onClick={() => { setShowHistory(false); setAddress(h.url); navigate(h.url); }} className="w-full flex items-center gap-2 p-2 rounded hover:bg-gray-200 text-left">
-                      {h.favicon ? <img src={h.favicon} className="w-4 h-4" alt="" /> : <div className="w-4 h-4 bg-gray-300 rounded" />}
+                                              {h.favicon ? <Image src={h.favicon} width={16} height={16} className="w-4 h-4" alt="" /> : <div className="w-4 h-4 bg-gray-300 rounded" />}
                       <div className="min-w-0">
                         <div className="text-sm truncate">{h.title}</div>
                         <div className="text-[11px] text-gray-500 truncate">{h.url}</div>
@@ -793,7 +794,7 @@ export default function ChromeApp() {
                         {imageResults.length === 0 && <div className="text-sm text-gray-500">No images</div>}
                         {imageResults.map((img, i) => (
                           <a key={i} href={img.link} target="_blank" rel="noreferrer" className="block group">
-                            <img src={img.thumbnail || img.original} alt={img.title || ""} className="w-full h-28 object-cover rounded-lg border border-gray-200 group-hover:opacity-90" />
+                            <Image src={img.thumbnail || img.original} alt={img.title || ""} width={200} height={112} className="w-full h-28 object-cover rounded-lg border border-gray-200 group-hover:opacity-90" />
                             <div className="mt-1 text-[11px] text-gray-500 truncate">{img.source}</div>
                           </a>
                         ))}
@@ -810,7 +811,7 @@ export default function ChromeApp() {
                               className="relative w-48 shrink-0 group"
                               title="Play"
                             >
-                              <img src={v.thumbnail} alt="" className="w-48 h-28 object-cover rounded-lg border border-gray-200" />
+                              <Image src={v.thumbnail} alt="" width={192} height={112} className="w-48 h-28 object-cover rounded-lg border border-gray-200" />
                               <div className="absolute inset-0 flex items-center justify-center">
                                 <div className="p-2 rounded-full bg-black/50 text-white opacity-90 group-hover:scale-105 transition"><HiPlay className="w-5 h-5" /></div>
                               </div>

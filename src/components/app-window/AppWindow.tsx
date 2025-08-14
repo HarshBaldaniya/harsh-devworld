@@ -37,11 +37,11 @@ export default function AppWindow({
   position: propPosition,
   size: propSize,
   onPositionChange,
-  onSizeChange
+  // onSizeChange - removed unused parameter
 }: AppWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false);
   const [position, setPosition] = useState(propPosition || initialPosition);
-  const [size, setSize] = useState(propSize || initialSize);
+  const [size, setSize] = useState(propSize || initialSize); // Keep for width/height usage
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
@@ -85,7 +85,7 @@ export default function AppWindow({
         document.removeEventListener('mouseup', handleMouseUp);
       };
     }
-  }, [isDragging, dragOffset, isMaximized]);
+  }, [isDragging, dragOffset, isMaximized, handleMouseMove, handleMouseUp]);
 
   return (
     <AnimatePresence>
