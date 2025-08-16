@@ -38,6 +38,7 @@
     "react-dom": "19.1.0",
     "react-icons": "5.5.0",
     "react-simple-code-editor": "^0.14.1",
+    "resend": "^6.0.1",
     "slate": "^0.118.0",
     "slate-history": "^0.113.1",
     "slate-react": "^0.117.4",

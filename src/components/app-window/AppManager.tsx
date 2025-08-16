@@ -5,6 +5,7 @@ import AppWindow from "./AppWindow";
 import FinderApp from "./FinderApp";
 import ChromeApp from "./ChromeApp";
 import NotesApp from "./NotesApp";
+import MailApp from "./MailApp";
 
 export interface AppState {
   id: string;
@@ -31,6 +32,7 @@ const APPS = {
     icon: "/images/dock/chrome.webp",
   },
   notes: { id: "notes", name: "Notes", icon: "/images/dock/note.png" },
+  mail: { id: "mail", name: "Mail", icon: "/images/dock/mail.svg" },
 };
 
 export default function AppManager() {
@@ -114,6 +116,8 @@ export default function AppManager() {
         return <ChromeApp />;
       case "notes":
         return <NotesApp />;
+      case "mail":
+        return <MailApp />;
       default:
         return <div>App not found</div>;
     }
