@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import BootLoader from "@/components/loader/BootLoader";
 import HomeScreen from "@/components/HomeScreen";
 import MainTopBar from "@/components/topbar/MainTopBar";
 import LockScreen from "@/components/LockScreen";
 import Dock from "@/components/Dock";
+import AppManager from "@/components/app-window/AppManager";
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppleMenuAction } from "@/components/topbar/TopBarLeft";
 
@@ -34,6 +36,12 @@ export default function HomePage() {
     }, 2500);
   };
 
+  const handleAppClick = (appId: string) => {
+    if ((window as Window & { openApp?: (appId: string) => void }).openApp) {
+      (window as Window & { openApp?: (appId: string) => void }).openApp!(appId);
+    }
+  };
+
   return (
     <>
       <audio ref={audioRef} src="/sounds/apple-boot.mp3" preload="auto" />
@@ -47,7 +55,8 @@ export default function HomePage() {
           <>
             <MainTopBar onAppleMenuAction={handleAppleMenuAction} />
             <HomeScreen />
-            <Dock />
+            <Dock onAppClick={handleAppClick} />
+            <AppManager />
           </>
         )}
       </AnimatePresence>
@@ -62,9 +71,11 @@ export default function HomePage() {
             transition={{ duration: 0.7 }}
             onClick={handleShutdownClick}
           >
-            <img
+            <Image
               src="/apple-logo.svg"
               alt="Apple Logo"
+              width={128}
+              height={128}
               className="w-24 h-24 sm:w-32 sm:h-32 invert"
               style={{ width: "auto", height: "auto", maxWidth: "128px", maxHeight: "128px" }}
             />

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { useBackground } from "@/contexts/BackgroundContext";
 
-const LOCK_BG = "/lock-screen.jpg";
 const AVATAR = "/hb-logo.jpg";
 
 function getFormattedDate() {
@@ -24,6 +25,7 @@ function getFormattedTime() {
 }
 
 export default function LockScreen({ onUnlock }: { onUnlock: () => void }) {
+  const { currentLockScreen } = useBackground();
   const [date, setDate] = useState(getFormattedDate());
   const [time, setTime] = useState(getFormattedTime());
 
@@ -41,7 +43,7 @@ export default function LockScreen({ onUnlock }: { onUnlock: () => void }) {
         key="lockscreen"
         className="fixed inset-0 z-[100] flex flex-col items-center justify-between bg-black/80"
         style={{
-          backgroundImage: `url(${LOCK_BG})`,
+          backgroundImage: `url(${currentLockScreen})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -59,9 +61,11 @@ export default function LockScreen({ onUnlock }: { onUnlock: () => void }) {
           </div>
         </div>
         <div className="flex flex-col items-center mb-16 select-none">
-          <img
+          <Image
             src={AVATAR}
             alt="User Avatar"
+            width={48}
+            height={48}
             className="w-12 h-12 rounded-full object-cover border-2 border-white/70 shadow mb-2"
             style={{ background: "#fff" }}
           />

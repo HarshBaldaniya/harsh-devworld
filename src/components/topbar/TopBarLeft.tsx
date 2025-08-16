@@ -1,5 +1,5 @@
 import { FaApple } from "react-icons/fa";
-import { FiFolder, FiHome, FiDownload, FiCloud, FiShare2, FiEdit2, FiTag, FiSearch, FiChevronRight } from "react-icons/fi";
+import { FiFolder, FiDownload, FiChevronRight } from "react-icons/fi";
 import React, { useState } from "react";
 
 const APPLE_MENU = [

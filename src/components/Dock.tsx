@@ -2,15 +2,20 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const DOCK_APPS = [
-  { name: "Finder", icon: "/images/dock/finder.png", active: false },
-  { name: "Chrome", icon: "/images/dock/chrome.webp", active: false },
-  { name: "Mail", icon: "/images/dock/mail.webp", active: false },
-  { name: "Notes", icon: "/images/dock/note.png", active: false },
+  { id: "finder", name: "Finder", icon: "/images/dock/finder.png", active: false },
+  { id: "chrome", name: "Chrome", icon: "/images/dock/chrome.webp", active: false },
+  { id: "mail", name: "Mail", icon: "/images/dock/mail.webp", active: false },
+  { id: "notes", name: "Notes", icon: "/images/dock/note.png", active: false },
 ];
 
-export default function Dock() {
+interface DockProps {
+  onAppClick?: (appId: string) => void;
+}
+
+export default function Dock({ onAppClick }: DockProps) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
@@ -94,10 +99,13 @@ export default function Dock() {
                   duration: 0.2,
                   ease: "easeOut"
                 }}
+                onClick={() => onAppClick?.(app.id)}
               >
-                <img
+                <Image
                   src={app.icon}
                   alt={app.name}
+                  width={56}
+                  height={56}
                   className="w-14 h-14 object-contain"
                   draggable={false}
                 />
