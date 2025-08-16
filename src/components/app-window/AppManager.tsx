@@ -32,7 +32,7 @@ const APPS = {
     icon: "/images/dock/chrome.webp",
   },
   notes: { id: "notes", name: "Notes", icon: "/images/dock/note.png" },
-  mail: { id: "mail", name: "Mail", icon: "/images/dock/mail.svg" },
+  mail: { id: "mail", name: "Mail", icon: "/images/dock/mail.webp" },
 };
 
 export default function AppManager() {

@@ -7,7 +7,7 @@ import Image from "next/image";
 const DOCK_APPS = [
   { id: "finder", name: "Finder", icon: "/images/dock/finder.png", active: false },
   { id: "chrome", name: "Chrome", icon: "/images/dock/chrome.webp", active: false },
-  { id: "mail", name: "Mail", icon: "/images/dock/mail.svg", active: false },
+  { id: "mail", name: "Mail", icon: "/images/dock/mail.webp", active: false },
   { id: "notes", name: "Notes", icon: "/images/dock/note.png", active: false },
 ];
 
