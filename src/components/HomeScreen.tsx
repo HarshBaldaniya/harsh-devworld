@@ -99,6 +99,11 @@ export default function HomeScreen() {
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
+  // Update document title
+  useEffect(() => {
+    document.title = "HarshOS - Developer Workspace";
+  }, []);
+
   // Handle right click with adaptive positioning
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
