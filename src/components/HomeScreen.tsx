@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import MacBackground from "./MacBackground";
 import { motion } from "framer-motion";
-import { LuImage, LuSettings, LuX, LuExternalLink, LuGithub, LuLinkedin, LuMaximize2, LuMinimize2, LuGlobe } from "react-icons/lu";
+import { LuImage, LuSettings, LuX, LuExternalLink, LuGithub, LuLinkedin, LuMaximize2, LuMinimize2, LuGlobe, LuCheck } from "react-icons/lu";
 import { useBackground } from "@/contexts/BackgroundContext";
 
 // Background images data
@@ -96,6 +96,8 @@ export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isChangingLockScreen, setIsChangingLockScreen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Handle right click with adaptive positioning
   const handleContextMenu = (e: React.MouseEvent) => {
@@ -158,6 +160,24 @@ export default function HomeScreen() {
   const openLink = (url: string) => {
     window.open(url, '_blank');
     setShowContextMenu(false);
+  };
+
+  // Handle background change with success notification
+  const handleBackgroundChange = (imageUrl: string, imageName: string) => {
+    if (isChangingLockScreen) {
+      setCurrentLockScreen(imageUrl);
+      setSuccessMessage(`Lock screen changed to "${imageName}"`);
+    } else {
+      setCurrentBackground(imageUrl);
+      setSuccessMessage(`Desktop background changed to "${imageName}"`);
+    }
+    setShowImageChanger(false);
+    setShowSuccessNotification(true);
+    
+    // Auto-hide notification after 3 seconds
+    setTimeout(() => {
+      setShowSuccessNotification(false);
+    }, 3000);
   };
 
   const filteredImages = selectedCategory === "all" 
@@ -323,14 +343,7 @@ export default function HomeScreen() {
                   <div
                     key={image.id}
                     className="group relative aspect-video rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform duration-200 border border-zinc-700"
-                    onClick={() => {
-                      if (isChangingLockScreen) {
-                        setCurrentLockScreen(image.url);
-                      } else {
-                        setCurrentBackground(image.url);
-                      }
-                      setShowImageChanger(false);
-                    }}
+                    onClick={() => handleBackgroundChange(image.url, image.name)}
                   >
                     <img
                       src={image.url}
@@ -354,6 +367,34 @@ export default function HomeScreen() {
             </div>
           </motion.div>
         </div>
+      )}
+
+      {/* Success Notification */}
+      {showSuccessNotification && (
+        <motion.div
+          className="fixed bottom-4 right-4 z-[9999]"
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.95 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+        >
+          <div className="bg-zinc-900/90 backdrop-blur-md border border-zinc-700/50 rounded-lg shadow-lg px-3 py-2">
+            <div className="flex items-center gap-2">
+              <div className="flex-shrink-0 w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center">
+                <LuCheck className="w-2.5 h-2.5 text-white" />
+              </div>
+              <p className="text-xs text-zinc-200 font-medium">
+                {successMessage}
+              </p>
+              <button
+                onClick={() => setShowSuccessNotification(false)}
+                className="flex-shrink-0 w-4 h-4 rounded-full hover:bg-zinc-700/50 transition-colors flex items-center justify-center ml-1"
+              >
+                <span className="text-xs font-light text-zinc-400">×</span>
+              </button>
+            </div>
+          </div>
+        </motion.div>
       )}
     </motion.div>
   );

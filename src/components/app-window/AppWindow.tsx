@@ -44,10 +44,17 @@ export default function AppWindow({
   const [size, setSize] = useState(propSize || initialSize); // Keep for width/height usage
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handleMaximize = () => {
+    setIsAnimating(true);
     setIsMaximized(!isMaximized);
     onMaximize();
+    
+    // Reset animation state after animation completes
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 600);
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -107,9 +114,28 @@ export default function AppWindow({
                 })
           }}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
+          animate={{ 
+            opacity: 1, 
+            scale: 1, 
+            y: 0,
+            backdropFilter: isAnimating ? "blur(20px)" : "blur(12px)",
+            ...(isAnimating && {
+              borderRadius: isMaximized ? 0 : 8,
+              y: isMaximized ? -20 : 0,
+              x: isMaximized ? -5 : 0,
+            })
+          }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          transition={{ 
+            duration: isAnimating ? 0.6 : 0.3, 
+            ease: isAnimating ? [0.25, 0.46, 0.45, 0.94] : "easeOut",
+            backdropFilter: { duration: isAnimating ? 0.6 : 0.3 },
+            ...(isAnimating && {
+              borderRadius: { duration: 0.4, ease: "easeInOut" },
+              y: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+              x: { duration: 0.5, ease: "easeInOut" }
+            })
+          }}
           onMouseDown={handleMouseDown}
           onClick={() => {
             if ((window as Window & { bringToFront?: (appId: string) => void }).bringToFront) {
@@ -118,9 +144,27 @@ export default function AppWindow({
           }}
         >
           {/* Window Header */}
-          <div className="window-header flex items-center justify-between bg-gray-100/80 backdrop-blur-sm border-b border-gray-200/50 px-4 py-2 cursor-move">
+          <motion.div 
+            className="window-header flex items-center justify-between bg-gray-100/80 backdrop-blur-sm border-b border-gray-200/50 px-4 py-2 cursor-move"
+            animate={{
+              backgroundColor: isAnimating ? "rgba(243, 244, 246, 0.9)" : "rgba(243, 244, 246, 0.8)",
+            }}
+            transition={{
+              duration: isAnimating ? 0.3 : 0.2
+            }}
+          >
             {/* Window Controls - Left Side */}
-            <div className="flex items-center gap-2">
+            <motion.div 
+              className="flex items-center gap-2"
+              animate={{
+                x: isAnimating ? (isMaximized ? -8 : 0) : 0,
+                y: isAnimating ? (isMaximized ? -2 : 0) : 0,
+              }}
+              transition={{
+                duration: isAnimating ? 0.5 : 0,
+                ease: "easeInOut"
+              }}
+            >
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -157,19 +201,40 @@ export default function AppWindow({
                   {isMaximized ? "⤢" : "⤡"}
                 </span>
               </button>
-            </div>
+            </motion.div>
             
             {/* Window Title - Center */}
-            <div className="flex items-center gap-3 absolute left-1/2 transform -translate-x-1/2">
+            <motion.div 
+              className="flex items-center gap-3 absolute left-1/2 transform -translate-x-1/2"
+              animate={{
+                y: isAnimating ? (isMaximized ? -3 : 0) : 0,
+                opacity: isAnimating ? (isMaximized ? 0.8 : 1) : 1,
+              }}
+              transition={{
+                duration: isAnimating ? 0.4 : 0,
+                ease: "easeInOut"
+              }}
+            >
               <Image src={icon} alt={title} width={20} height={20} className="w-5 h-5" />
               <span className="text-sm font-medium text-gray-700">{title}</span>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Window Content */}
-          <div className="h-full overflow-hidden">
+          <motion.div 
+            className="h-full overflow-hidden"
+            animate={{
+              opacity: isAnimating ? (isMaximized ? 0.9 : 1) : 1,
+              filter: isAnimating ? (isMaximized ? "contrast(1.08) saturate(1.05)" : "contrast(1) saturate(1)") : "contrast(1) saturate(1)",
+              y: isAnimating ? (isMaximized ? -5 : 0) : 0,
+            }}
+            transition={{
+              duration: isAnimating ? 0.5 : 0,
+              ease: "easeInOut"
+            }}
+          >
             {children}
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
