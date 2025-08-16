@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import AppWindow from "./AppWindow";
 import FinderApp from "./FinderApp";
 import ChromeApp from "./ChromeApp";
+import NotesApp from "./NotesApp";
 
 export interface AppState {
   id: string;
@@ -15,7 +16,7 @@ export interface AppState {
   zIndex: number;
   position: { x: number; y: number };
   size: { width: number; height: number };
-  lastState: 'normal' | 'maximized' | 'minimized';
+  lastState: "normal" | "maximized" | "minimized";
 }
 
 const APPS = {
@@ -29,6 +30,7 @@ const APPS = {
     name: "Chrome",
     icon: "/images/dock/chrome.webp",
   },
+  notes: { id: "notes", name: "Notes", icon: "/images/dock/note.png" },
 };
 
 export default function AppManager() {
@@ -37,8 +39,10 @@ export default function AppManager() {
 
   // Expose openApp function globally
   React.useEffect(() => {
-    (window as Window & { openApp?: (appId: string) => void }).openApp = (appId: string) => {
-      setApps(prev => ({
+    (window as Window & { openApp?: (appId: string) => void }).openApp = (
+      appId: string
+    ) => {
+      setApps((prev) => ({
         ...prev,
         [appId]: {
           ...APPS[appId as keyof typeof APPS],
@@ -46,30 +50,33 @@ export default function AppManager() {
           isMinimized: false,
           isMaximized: false,
           zIndex: maxZIndex + 1,
-          position: { x: 100 + (Object.keys(prev).length * 50), y: 100 + (Object.keys(prev).length * 30) },
+          position: {
+            x: 100 + Object.keys(prev).length * 50,
+            y: 100 + Object.keys(prev).length * 30,
+          },
           size: { width: 800, height: 600 },
-          lastState: 'normal',
-        }
+          lastState: "normal",
+        },
       }));
-      setMaxZIndex(prev => prev + 1);
+      setMaxZIndex((prev) => prev + 1);
     };
 
-    (window as Window & { bringToFront?: (appId: string) => void }).bringToFront = (appId: string) => {
-      setApps(prev => ({
+    (
+      window as Window & { bringToFront?: (appId: string) => void }
+    ).bringToFront = (appId: string) => {
+      setApps((prev) => ({
         ...prev,
         [appId]: {
           ...prev[appId],
           zIndex: maxZIndex + 1,
-        }
+        },
       }));
-      setMaxZIndex(prev => prev + 1);
+      setMaxZIndex((prev) => prev + 1);
     };
   }, [maxZIndex]);
 
-
-
   const closeApp = (appId: string) => {
-    setApps(prev => {
+    setApps((prev) => {
       const newApps = { ...prev };
       // Remove the app completely when closed
       delete newApps[appId];
@@ -78,28 +85,26 @@ export default function AppManager() {
   };
 
   const minimizeApp = (appId: string) => {
-    setApps(prev => ({
+    setApps((prev) => ({
       ...prev,
       [appId]: {
         ...prev[appId],
         isMinimized: true,
-        lastState: prev[appId].isMaximized ? 'maximized' : 'normal',
-      }
+        lastState: prev[appId].isMaximized ? "maximized" : "normal",
+      },
     }));
   };
 
   const maximizeApp = (appId: string) => {
-    setApps(prev => ({
+    setApps((prev) => ({
       ...prev,
       [appId]: {
         ...prev[appId],
         isMaximized: !prev[appId].isMaximized,
-        lastState: !prev[appId].isMaximized ? 'maximized' : 'normal',
-      }
+        lastState: !prev[appId].isMaximized ? "maximized" : "normal",
+      },
     }));
   };
-
-
 
   const renderAppContent = (appId: string) => {
     switch (appId) {
@@ -107,6 +112,8 @@ export default function AppManager() {
         return <FinderApp />;
       case "chrome":
         return <ChromeApp />;
+      case "notes":
+        return <NotesApp />;
       default:
         return <div>App not found</div>;
     }
@@ -133,4 +140,4 @@ export default function AppManager() {
       ))}
     </>
   );
-} 
+}
